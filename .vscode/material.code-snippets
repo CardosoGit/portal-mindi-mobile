@@ -1,0 +1,127 @@
+{
+  // Place your gestor-pedidos-mindi-mob workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and
+  // description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope
+  // is left empty or omitted, the snippet gets applied to all languages. The prefix is what is
+  // used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+  // $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders.
+  // Placeholders with the same ids are connected.
+  // Example:
+  // "Print to console": {
+  // 	"scope": "javascript,typescript",
+  // 	"prefix": "log",
+  // 	"body": [
+  // 		"console.log('$1');",
+  // 		"$2"
+  // 	],
+  // 	"description": "Log output to console"
+  // }
+  "Grid": {
+    "prefix": "mat-grid",
+    "body": [
+      "<Grid container spacing={3}>",
+      "        <Grid item xs={6}>",
+      "        </Grid>",
+      "        <Grid item xs={6}>",
+      "        </Grid>",
+      "</Grid>"
+    ],
+    "description": "Grid"
+  },
+  "O container centraliza seu conteúdo horizontalmente. É o elemento de leiaute mais básico.": {
+    "prefix": "mat-container",
+    "body": ["<Container maxWidth=\"sm\">", "${1:Conteudo}", "</Container>"],
+    "description": "O container centraliza seu conteúdo horizontalmente. É o elemento de leiaute mais básico."
+  },
+  "Botão": {
+    "prefix": "mat-button",
+    "body": [
+      "<Button variant=\"contained\" color=\"primary\">",
+      "  Primary",
+      "</Button>"
+    ],
+    "description": "Botão"
+  },
+  "Fab button": {
+    "prefix": "mat-fab-button",
+    "body": ["<Fab color=\"primary\" aria-label=\"add\">", "", "</Fab>"],
+    "description": "Fab button"
+  },
+  "Botões de opção permitem o usuário selecionar uma das opções de um conjunto.": {
+    "prefix": "mat-radio-group",
+    "body": [
+      "<FormControl component=\"fieldset\">",
+      "  <FormLabel component=\"legend\">Label</FormLabel>",
+      "  <RadioGroup value={value} onChange={handleChange}>",
+      "    <FormControlLabel value=\"value\" control={<Radio />} label=\"label\" />",
+      "  </RadioGroup>",
+      "</FormControl>"
+    ],
+    "description": "Botões de opção permitem o usuário selecionar uma das opções de um conjunto."
+  },
+  "Campos de texto permitem que os usuários digitem e editem texto.": {
+    "prefix": "mat-text-field",
+    "body": ["<TextField  label=\"label\" variant=\"outlined\" placeholder=\"digite aqui...\" />"],
+    "description": "Campos de texto permitem que os usuários digitem e editem texto."
+  },
+  "Item de Lista": {
+    "prefix": "mat-list-item",
+    "body": [
+      "<ListItem>",
+      "        <ListItemAvatar>",
+      "          <Avatar>",
+      "            <FolderIcon />",
+      "          </Avatar>",
+      "        </ListItemAvatar>",
+      "        <ListItemText",
+      "          primary=\"Single-line item\"",
+      "          secondary={secondary ? \"Secondary text\" : null}",
+      "        />",
+      "        <ListItemSecondaryAction>",
+      "          <IconButton >",
+      "            <ChevronRightIcon />",
+      "          </IconButton>",
+      "        </ListItemSecondaryAction>",
+      "</ListItem>"
+    ],
+    "description": "Item de Lista"
+  },
+  "Lista": {
+    "prefix": "mat-list",
+    "body": [
+      "<List>",
+      "        <ListItem>",
+      "          <ListItemAvatar>",
+      "            <Avatar>",
+      "              <FolderIcon />",
+      "            </Avatar>",
+      "          </ListItemAvatar>",
+      "          <ListItemText",
+      "            primary=\"Single-line item\"",
+      "            secondary=\"Secondary text\"",
+      "          />",
+      "          <ListItemSecondaryAction>",
+      "            <IconButton> ",
+      "              <ChevronRightIcon />",
+      "            </IconButton>",
+      "          </ListItemSecondaryAction>",
+      "        </ListItem>",
+      "</List>"
+    ],
+    "description": "Lista"
+  },
+  "A barra de aplicativos exibe informações e ações relacionadas à tela atual.": {
+    "prefix": "mat-app-bar",
+    "body": [
+      "<AppBar position=\"static\">",
+      "        <Toolbar>",
+      "          <IconButton edge=\"start\" color=\"inherit\" aria-label=\"menu\">",
+      "            <MenuIcon />",
+      "          </IconButton>",
+      "          <Typography variant=\"h6\">News</Typography>",
+      "          <Button color=\"inherit\">Login</Button>",
+      "        </Toolbar>",
+      "</AppBar>"
+    ],
+    "description": "A barra de aplicativos exibe informações e ações relacionadas à tela atual."
+  }
+}
