@@ -6,7 +6,7 @@ import {
   Route,
   BrowserRouter as Router,
   Switch,
-  Redirect,
+  useRouteMatch,
 } from "react-router-dom";
 import CategoryPage from "./Pages/Category";
 import OrdersPage from "./Pages/Orders";
@@ -15,6 +15,8 @@ import StatsPage from "Pages/Stats";
 import NotFoundPage from "Pages/404";
 
 function App() {
+  const routeMatch = useRouteMatch();
+  console.log(routeMatch);
   return (
     <div className="App">
       <Router>
