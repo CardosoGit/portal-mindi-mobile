@@ -54,6 +54,11 @@ const ProductsView: React.FC<ProductViewType> = ({ data }) => {
                       }
                     })
                   )}
+                  {item.note && (
+                    <b style={{ marginLeft: "-20px" }}>
+                      Observação: {item.note}
+                    </b>
+                  )}
                 </ul>
               }
             />

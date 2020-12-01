@@ -111,6 +111,7 @@ const InfoView: React.FC<InfoViewType> = ({ data }) => {
           </Grid>
         </Grid>
       </Row>
+      {data.note && <Row>Observação do pedido: Bater palma</Row>}
     </View>
   );
 };
