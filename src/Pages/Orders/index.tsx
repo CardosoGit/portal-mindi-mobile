@@ -24,7 +24,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import { api } from "Services/Api";
 import { Order } from "Types/Order";
-import { AppContent } from "Theme";
+import { AppContent, Row } from "Theme";
 import { setInterval } from "timers";
 
 // import { Container } from './styles';
@@ -168,6 +168,10 @@ const OrdersPage: React.FC = () => {
               </ListItem>
             ))}
         </List>
+        {criteria === filterType.new &&
+          orders.filter(byStatus(criteria)).length === 0 && (
+            <Row horizontalCenter>Aguardando novos pedidos...</Row>
+          )}
       </AppContent>
       <AppBar position="fixed" style={{ top: "auto", bottom: 0 }}>
         <BottomNavigation
