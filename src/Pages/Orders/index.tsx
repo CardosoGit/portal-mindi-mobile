@@ -15,6 +15,8 @@ import {
   BottomNavigation,
   BottomNavigationAction,
 } from "@material-ui/core";
+import SearchBar from "react-js-search";
+import SearchField from "react-search-field";
 import { Gestures } from "react-gesture-handler";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
@@ -36,29 +38,38 @@ const OrdersPage: React.FC = () => {
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [criteria, setCriteria] = useState<number>(filterType.new);
+  const [filterText, setFilterText] = useState<string>("");
 
-  const filter = useCallback(() => {
+  const byStatus = (criteria: any) => (order: Order) => {
     switch (criteria) {
       case filterType.new:
-        return orders.filter(
-          (order) => order.events[order.events.length - 1].event === "created"
-        );
+        return order.events[order.events.length - 1].event === "created";
+
       case filterType.confirmed:
-        return orders.filter(
-          (order) => order.events[order.events.length - 1].event !== "created"
-        );
+        return order.events[order.events.length - 1].event !== "created";
 
       default:
-        return orders;
+        return true;
     }
-  }, [criteria, orders]);
+  };
 
   const handleGesture = (event: HammerInput) => {
-    if (event.type === "panright") {
+    if (event.type === "swiperight") {
       setCriteria(filterType.new);
     } else {
       setCriteria(filterType.confirmed);
     }
+  };
+
+  const onSearchChange = (event: string) => {
+    setFilterText(event);
+  };
+
+  const byName = (textToFilter: string) => (order: Order) => {
+    return (
+      order.identify.name.toLowerCase().search(textToFilter.toLowerCase()) !==
+      -1
+    );
   };
 
   useEffect(() => {
@@ -74,10 +85,10 @@ const OrdersPage: React.FC = () => {
   return (
     <Gestures
       recognizers={{
-        Pan: {
+        Swipe: {
           events: {
-            panleft: handleGesture,
-            panright: handleGesture,
+            swiperight: handleGesture,
+            swipeleft: handleGesture,
           },
         },
       }}
@@ -96,8 +107,14 @@ const OrdersPage: React.FC = () => {
         </Toolbar>
       </AppBar>
       <AppContent>
+        <SearchField
+          onChange={onSearchChange}
+          placeholder={"Pesquise por cliente..."}
+        />
         <List>
-          {filter()
+          {orders
+            .filter(byStatus(criteria))
+            .filter(byName(filterText))
             .sort((a, b) =>
               differenceInSeconds(new Date(b.createdAt), new Date(a.createdAt))
             )

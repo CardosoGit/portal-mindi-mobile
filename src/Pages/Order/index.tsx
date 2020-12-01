@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import {
   useHistory,
   useRouteMatch,
@@ -25,6 +25,8 @@ import ProductsView from "./Products";
 import { AppContent } from "Theme";
 import { api } from "Services/Api";
 import { Order } from "Types/Order";
+import { Tab } from "@material-ui/icons";
+import { queryAllByTestId } from "@testing-library/react";
 // import { Container } from './styles';
 
 function updateHistory(path: any) {
@@ -42,12 +44,13 @@ const OrderPage: React.FC = () => {
   });
 
   const tab = Number(query.tab || 1);
+
   const id = query.id;
 
   const [order, setOrder] = useState<Order | null>(null);
 
   const handleGesture = (event: HammerInput) => {
-    if (event.type === "panright") {
+    if (event.type === "swiperight") {
       setQuery({
         tab: "1",
       });
@@ -70,10 +73,10 @@ const OrderPage: React.FC = () => {
   return (
     <Gestures
       recognizers={{
-        Pan: {
+        Swipe: {
           events: {
-            panleft: handleGesture,
-            panright: handleGesture,
+            swiperight: (event) => handleGesture(event),
+            swipeleft: (event) => handleGesture(event),
           },
         },
       }}
