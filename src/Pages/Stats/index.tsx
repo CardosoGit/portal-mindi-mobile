@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   useHistory,
   useRouteMatch,
@@ -19,10 +19,14 @@ import {
   ListItemText,
 } from "@material-ui/core";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import { AppContent, Row } from "Theme";
+import { format } from "date-fns";
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import ptBrLocale from "date-fns/locale/pt-BR";
+
+import { AppContent, Row } from "Theme";
+import { api } from "Services/Api";
+import { Order } from "Types/Order";
 
 // import { Container } from './styles';
 
@@ -37,6 +41,21 @@ const StatsPage: React.FC = () => {
   const [selectedDate, handleDateChange] = React.useState<Date | null>(
     new Date()
   );
+
+  const [orders, setOrders] = useState<Order[]>([]);
+
+  useEffect(() => {
+    const today = new Date();
+    api
+      .get(`portal/orders?date=${format(today, "yyyy-MM-dd")}`)
+      .then(({ data }) => {
+        setOrders(data);
+      })
+      .catch((err) => alert("Erro ao buscar cardapio"));
+  }, []);
+
+  const count = orders.length;
+  const total = orders.reduce((acum, order) => acum + order.total, 0);
 
   return (
     <>
@@ -67,17 +86,27 @@ const StatsPage: React.FC = () => {
           </MuiPickersUtilsProvider>
         </Row>
         <List>
-          <ListItem >
+          <ListItem>
             <ListItemText primary="Pedidos recebidos" />
-            <ListItemSecondaryAction>5</ListItemSecondaryAction>
+            <ListItemSecondaryAction>{count}</ListItemSecondaryAction>
           </ListItem>
-          <ListItem >
+          <ListItem>
             <ListItemText primary="Total de pedidos" />
-            <ListItemSecondaryAction>R$ 37,90</ListItemSecondaryAction>
+            <ListItemSecondaryAction>
+              {total.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              })}
+            </ListItemSecondaryAction>
           </ListItem>
-          <ListItem >
+          <ListItem>
             <ListItemText primary="Ticket médio" />
-            <ListItemSecondaryAction>R$ 16,90</ListItemSecondaryAction>
+            <ListItemSecondaryAction>
+              {(total / count).toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              })}
+            </ListItemSecondaryAction>
           </ListItem>
         </List>
       </AppContent>
