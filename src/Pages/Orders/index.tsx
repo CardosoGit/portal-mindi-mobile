@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import { format, differenceInSeconds } from "date-fns";
 import { useDispatch, useSelector } from "react-redux";
+import useInterval from "@use-it/interval";
 import {
   IconButton,
   AppBar,
@@ -24,6 +25,7 @@ import BarChartIcon from "@material-ui/icons/BarChart";
 import { api } from "Services/Api";
 import { Order } from "Types/Order";
 import { AppContent } from "Theme";
+import { setInterval } from "timers";
 
 // import { Container } from './styles';
 
@@ -72,14 +74,41 @@ const OrdersPage: React.FC = () => {
     );
   };
 
-  useEffect(() => {
+  const getOrders = async (): Promise<Order[]> => {
     const today = new Date();
-    api
-      .get(`portal/orders?date=${format(today, "yyyy-MM-dd")}`)
-      .then(({ data }) => {
-        setOrders(data);
+    const { data } = await api.get(
+      `portal/orders?date=${format(today, "yyyy-MM-dd")}`
+    );
+    return data;
+  };
+
+  const playAlert = () => {
+    let src =
+      "//s3.amazonaws.com/appforest_uf/f1598429253106x343351561325749800/apple_msg_tone.mp3";
+
+    for (let x = 1; x <= 10; x++) {
+      setTimeout(() => {
+        let audio = new Audio(src);
+        audio.play();
+      }, 100 * x);
+    }
+  };
+
+  useInterval(() => {
+    getOrders()
+      .then((fetchedOrders) => {
+        if (fetchedOrders.length > orders.length) {
+          playAlert();
+        }
+        setOrders(fetchedOrders);
       })
-      .catch((err) => alert("Erro ao buscar cardapio"));
+      .catch((err) => alert("Erro ao buscar Pedidos"));
+  }, 30000);
+
+  useEffect(() => {
+    getOrders()
+      .then((orders) => setOrders(orders))
+      .catch((err) => alert("Erro ao buscar Pedidos"));
   }, []);
 
   return (
