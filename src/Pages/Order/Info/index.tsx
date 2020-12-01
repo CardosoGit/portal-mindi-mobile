@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   useHistory,
   useRouteMatch,
@@ -15,22 +15,26 @@ import {
   ListItem,
   ListItemText,
 } from "@material-ui/core";
+import { Order } from "Types/Order";
 
 // import { Container } from './styles';
 
-const InfoView: React.FC = () => {
+type InfoViewType = {
+  data: Order;
+};
+
+const InfoView: React.FC<InfoViewType> = ({ data }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const { url, path, isExact, params } = useRouteMatch();
   const {} = useParams();
   const { search } = useLocation();
-  const searchParamValue = new URLSearchParams(search).get("searchParamName");
 
   return (
     <View>
       <Grid container spacing={3} alignItems="center">
         <Grid item xs={6}>
-          <ListItemText primary="João Cardoso" secondary="Nome" />
+          <ListItemText primary={data.identify.name} secondary="Nome" />
         </Grid>
         <Grid container xs={6} justify="center">
           <Button variant="contained" color="primary">
@@ -40,9 +44,9 @@ const InfoView: React.FC = () => {
       </Grid>
       <Divider />
       <List>
-        <ListItemText primary="(55) 9999-8888" secondary="Telefone" />
+        <ListItemText primary={data.identify.phone} secondary="Telefone" />
         <ListItemText
-          primary="Rua Dr. pestana, 187 Luiz Fogliatto"
+          primary={`${data.address?.publicPlace} ${data.address?.number} ${data.address?.neighborhood}`}
           secondary="Endereço"
         />
       </List>
@@ -53,7 +57,10 @@ const InfoView: React.FC = () => {
             Total de Produtos
           </Grid>
           <Grid container xs={6} justify="flex-end">
-            R$ 20,00
+            {data.totalProducts.toLocaleString("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+            })}
           </Grid>
         </Grid>
       </Row>
@@ -63,7 +70,10 @@ const InfoView: React.FC = () => {
             Taxa de entrega
           </Grid>
           <Grid container xs={6} justify="flex-end">
-            R$ 20,00
+            {data.deliveryFee?.toLocaleString("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+            })}
           </Grid>
         </Grid>
       </Row>
@@ -73,7 +83,10 @@ const InfoView: React.FC = () => {
             Total
           </Grid>
           <Grid container xs={6} justify="flex-end">
-            R$ 40,00
+            {data.total.toLocaleString("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+            })}
           </Grid>
         </Grid>
       </Row>

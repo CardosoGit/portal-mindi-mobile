@@ -12,7 +12,7 @@ import NotFoundPage from "Pages/404";
 function App() {
   return (
     <div className="App">
-      <Router basename="m">
+      <Router basename="/m">
         <Switch>
           <Route exact path="/produto">
             <ProductPage />
@@ -32,9 +32,7 @@ function App() {
           <Route exact path="/relatorio">
             <StatsPage />
           </Route>
-          <Route exact path="/relatorio">
-            <StatsPage />
-          </Route>
+
           <Route component={NotFoundPage} />
         </Switch>
       </Router>

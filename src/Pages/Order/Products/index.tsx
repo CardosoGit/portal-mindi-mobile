@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import {
   useHistory,
   useRouteMatch,
@@ -8,10 +8,15 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { View } from "Theme";
 import { List, ListItem, ListItemText } from "@material-ui/core";
+import { Order } from "Types/Order";
 
 // import { Container } from './styles';
 
-const ProductsView: React.FC = () => {
+type ProductViewType = {
+  data: Order;
+};
+
+const ProductsView: React.FC<ProductViewType> = ({ data }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const { url, path, isExact, params } = useRouteMatch();
@@ -22,20 +27,38 @@ const ProductsView: React.FC = () => {
   return (
     <View>
       <List>
-        <ListItem divider>
-          <ListItemText
-            primary="1x Açai 200 ML - R$30,00"
-            secondary={
-              <ul>
-                <li>sabor 1</li>
-                <li>sabor 2</li>
-              </ul>
-            }
-          />
-        </ListItem>
-        <ListItem divider>
-          <ListItemText primary="2x Açai 300ML" />
-        </ListItem>
+        {data.itens.map((item) => (
+          <ListItem divider>
+            <ListItemText
+              primary={`${item.qtd}x ${
+                item.productDescription
+              } - ${item.price.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              })}`}
+              secondary={
+                <ul>
+                  {item.groups.map((group) =>
+                    group.map((group, idx) => {
+                      if (idx === 0) {
+                        return (
+                          <Fragment>
+                            <b style={{ marginLeft: "-20px" }}>
+                              {group.group}:
+                            </b>
+                            <li>{group.printDescription}</li>;
+                          </Fragment>
+                        );
+                      } else {
+                        return <li>{group.printDescription}</li>;
+                      }
+                    })
+                  )}
+                </ul>
+              }
+            />
+          </ListItem>
+        ))}
       </List>
     </View>
   );

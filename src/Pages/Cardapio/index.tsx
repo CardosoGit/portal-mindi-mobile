@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import {
   ListItem,
@@ -13,11 +13,24 @@ import {
 } from "@material-ui/core";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import { api } from "Services/Api";
+import { Category } from "Types/Category";
 
 // import { Container } from './styles';
 
 const Cardapio: React.FC = () => {
   const history = useHistory();
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    api
+      .get("menu/categories")
+      .then(({ data }) => {
+        setCategories(data);
+      })
+      .catch((err) => alert("Erro ao buscar cardapio"));
+  }, []);
+
   return (
     <>
       <AppBar position="static">
@@ -27,22 +40,21 @@ const Cardapio: React.FC = () => {
       </AppBar>
       <Container maxWidth="sm">
         <List>
-          <ListItem divider onClick={() => history.push("/categoria")}>
-            <ListItemText primary="Pizzas" />
-            <ListItemSecondaryAction>
-              <IconButton>
-                <ChevronRightIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem divider>
-            <ListItemText primary="Bebidas" />
-            <ListItemSecondaryAction>
-              <IconButton>
-                <ChevronRightIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
+          {categories.map((category) => (
+            <ListItem
+              divider
+              onClick={() =>
+                history.push(`/categoria?categoryId=${category._id}`)
+              }
+            >
+              <ListItemText primary={category.nameShow} />
+              <ListItemSecondaryAction>
+                <IconButton>
+                  <ChevronRightIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+          ))}
         </List>
       </Container>
     </>

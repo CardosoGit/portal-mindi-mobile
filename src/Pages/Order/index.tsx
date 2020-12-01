@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   useHistory,
   useRouteMatch,
@@ -17,10 +17,18 @@ import {
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import ShoppingBasketOutlinedIcon from "@material-ui/icons/ShoppingBasketOutlined";
+import useQueryString from "use-query-string";
+
 import InfoView from "./Info";
 import ProductsView from "./Products";
 import { AppContent } from "Theme";
+import { api } from "Services/Api";
+import { Order } from "Types/Order";
 // import { Container } from './styles';
+
+function updateHistory(path: any) {
+  window.history.pushState(null, document.title, path);
+}
 
 const OrderPage: React.FC = () => {
   const history = useHistory();
@@ -28,9 +36,23 @@ const OrderPage: React.FC = () => {
   const dispatch = useDispatch();
   const {} = useParams();
   const { search, pathname } = useLocation();
-  const tab = Number(new URLSearchParams(search).get("tab") || 1);
+  const [query, setQuery] = useQueryString(window.location, updateHistory, {
+    parseBooleans: true,
+  });
 
-  const [selectedTab, setSelectedTab] = React.useState(0);
+  const tab = Number(query.tab || 1);
+  const id = query.id;
+
+  const [order, setOrder] = useState<Order | null>(null);
+
+  useEffect(() => {
+    api
+      .get("orders/" + id)
+      .then(({ data }) => {
+        setOrder(data);
+      })
+      .catch((err) => alert(err));
+  }, [id]);
 
   return (
     <>
@@ -39,7 +61,7 @@ const OrderPage: React.FC = () => {
           <IconButton
             color="inherit"
             style={{ paddingLeft: "0px" }}
-            onClick={() => history.goBack()}
+            onClick={() => history.replace("/pedidos")}
           >
             <ChevronLeftIcon />
           </IconButton>
@@ -47,8 +69,9 @@ const OrderPage: React.FC = () => {
         </Toolbar>
       </AppBar>
       <AppContent>
-        {tab === 1 && <InfoView />}
-        {tab === 2 && <ProductsView />}
+        {!order && <div>buscando...</div>}
+        {order && tab === 1 && <InfoView data={order} />}
+        {order && tab === 2 && <ProductsView data={order} />}
       </AppContent>
       <AppBar position="fixed" style={{ top: "auto", bottom: 0 }}>
         <BottomNavigation
@@ -56,14 +79,12 @@ const OrderPage: React.FC = () => {
           value={tab - 1}
           onChange={(event, newValue) => {
             if (newValue === 0) {
-              history.push({
-                pathname: pathname,
-                search: "?tab=1",
+              setQuery({
+                tab: "1",
               });
             } else {
-              history.push({
-                pathname: pathname,
-                search: "?tab=2",
+              setQuery({
+                tab: "2",
               });
             }
           }}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -15,12 +15,26 @@ import {
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import BarChartIcon from "@material-ui/icons/BarChart";
+import { api } from "Services/Api";
+import { Order } from "Types/Order";
 
 // import { Container } from './styles';
 
 const OrdersPage: React.FC = () => {
   const history = useHistory();
   const dispatch = useDispatch();
+
+  const [orders, setOrders] = useState<Order[]>([]);
+
+  useEffect(() => {
+    api
+      .get("portal/orders")
+      .then(({ data }) => {
+        setOrders(data);
+      })
+      .catch((err) => alert("Erro ao buscar cardapio"));
+  }, []);
+
   return (
     <>
       <AppBar position="static">
@@ -38,22 +52,23 @@ const OrdersPage: React.FC = () => {
       </AppBar>
       <Container maxWidth="sm">
         <List>
-          <ListItem onClick={() => history.push("/pedido")} divider>
-            <ListItemText primary="João Cardoso" secondary="Retirada" />
-            <ListItemSecondaryAction>
-              <IconButton color="primary">
-                <ChevronRightIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem divider>
-            <ListItemText primary="Cleia brito" secondary="Entrega" />
-            <ListItemSecondaryAction>
-              <IconButton>
-                <ChevronRightIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
+          {orders.map((order) => (
+            <ListItem
+              key={order._id}
+              onClick={() => history.push(`/pedido?id=${order._id}`)}
+              divider
+            >
+              <ListItemText
+                primary={order.identify.name}
+                secondary="Retirada"
+              />
+              <ListItemSecondaryAction>
+                <IconButton color="primary">
+                  <ChevronRightIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+          ))}
         </List>
       </Container>
     </>
