@@ -26,4 +26,6 @@ export const AppContent = styled.div`
   padding-right: 16px;
   padding-top: 70px;
   width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
 `;

@@ -46,7 +46,7 @@ const ProductsView: React.FC<ProductViewType> = ({ data }) => {
                             <b style={{ marginLeft: "-20px" }}>
                               {group.group}:
                             </b>
-                            <li>{group.printDescription}</li>;
+                            <li>{group.printDescription.trim()}</li>
                           </Fragment>
                         );
                       } else {

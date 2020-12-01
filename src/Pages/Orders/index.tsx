@@ -18,6 +18,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import { api } from "Services/Api";
 import { Order } from "Types/Order";
+import { AppContent } from "Theme";
 
 // import { Container } from './styles';
 
@@ -39,7 +40,7 @@ const OrdersPage: React.FC = () => {
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <Typography slot="start" variant="h6">
             Pedidos
@@ -52,7 +53,7 @@ const OrdersPage: React.FC = () => {
           </IconButton>
         </Toolbar>
       </AppBar>
-      <Container maxWidth="sm">
+      <AppContent>
         <List>
           {orders.map((order) => (
             <ListItem
@@ -62,17 +63,20 @@ const OrdersPage: React.FC = () => {
             >
               <ListItemText
                 primary={order.identify.name}
-                secondary="Retirada"
+                secondary={order.address?.number ? "Entrega" : "Retirada"}
               />
               <ListItemSecondaryAction>
-                <IconButton color="primary">
+                <IconButton
+                  color="primary"
+                  onClick={() => history.push(`/pedido?id=${order._id}`)}
+                >
                   <ChevronRightIcon />
                 </IconButton>
               </ListItemSecondaryAction>
             </ListItem>
           ))}
         </List>
-      </Container>
+      </AppContent>
     </>
   );
 };
