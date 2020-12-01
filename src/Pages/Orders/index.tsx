@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { format } from "date-fns";
 import { useDispatch, useSelector } from "react-redux";
 import {
   IconButton,
@@ -27,8 +28,9 @@ const OrdersPage: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
+    const today = new Date();
     api
-      .get("portal/orders")
+      .get(`portal/orders?date=${format(today, "yyyy-MM-dd")}`)
       .then(({ data }) => {
         setOrders(data);
       })
