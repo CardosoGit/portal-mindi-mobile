@@ -93,7 +93,7 @@ const OrderPage: React.FC = () => {
           <Typography variant="h6">Detalhes do Pedido</Typography>
         </Toolbar>
       </AppBar>
-      <AppContent>
+      <AppContent bottomPadding>
         {!order && <div>buscando...</div>}
         {order && tab === 1 && <InfoView data={order} />}
         {order && tab === 2 && <ProductsView data={order} />}

@@ -135,7 +135,7 @@ const OrdersPage: React.FC = () => {
           </IconButton>
         </Toolbar>
       </AppBar>
-      <AppContent>
+      <AppContent bottomPadding>
         <SearchField
           onChange={onSearchChange}
           placeholder={"Pesquise por cliente..."}

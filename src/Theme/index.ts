@@ -4,6 +4,10 @@ interface ViewProps {
   readonly horizontalCenter?: boolean;
 }
 
+interface AppContentProps {
+  readonly bottomPadding?: boolean;
+}
+
 export const Row = styled.div<ViewProps>`
   width: 100%;
   padding-top: 5px;
@@ -21,7 +25,7 @@ export const View = styled.div`
   text-align: left;
 `;
 
-export const AppContent = styled.div`
+export const AppContent = styled.div<AppContentProps>`
   padding-left: 16px;
   padding-right: 16px;
   padding-top: 70px;
@@ -29,4 +33,9 @@ export const AppContent = styled.div`
   max-width: 600px;
   margin: 0 auto;
   min-height: 100vh;
+  ${({ bottomPadding }) =>
+    bottomPadding &&
+    `
+  padding-bottom:70px;
+`}
 `;
