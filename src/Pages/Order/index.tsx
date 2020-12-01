@@ -14,6 +14,7 @@ import {
   BottomNavigation,
   BottomNavigationAction,
 } from "@material-ui/core";
+import { Gestures } from "react-gesture-handler";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import ShoppingBasketOutlinedIcon from "@material-ui/icons/ShoppingBasketOutlined";
@@ -45,6 +46,18 @@ const OrderPage: React.FC = () => {
 
   const [order, setOrder] = useState<Order | null>(null);
 
+  const handleGesture = (event: HammerInput) => {
+    if (event.type === "panright") {
+      setQuery({
+        tab: "1",
+      });
+    } else {
+      setQuery({
+        tab: "2",
+      });
+    }
+  };
+
   useEffect(() => {
     api
       .get("orders/" + id)
@@ -55,7 +68,16 @@ const OrderPage: React.FC = () => {
   }, [id]);
 
   return (
-    <>
+    <Gestures
+      recognizers={{
+        Pan: {
+          events: {
+            panleft: handleGesture,
+            panright: handleGesture,
+          },
+        },
+      }}
+    >
       <AppBar position="fixed">
         <Toolbar>
           <IconButton
@@ -99,7 +121,7 @@ const OrderPage: React.FC = () => {
           />
         </BottomNavigation>
       </AppBar>
-    </>
+    </Gestures>
   );
 };
 

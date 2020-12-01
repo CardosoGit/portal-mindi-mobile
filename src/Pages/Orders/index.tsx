@@ -15,6 +15,7 @@ import {
   BottomNavigation,
   BottomNavigationAction,
 } from "@material-ui/core";
+import { Gestures } from "react-gesture-handler";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import BarChartIcon from "@material-ui/icons/BarChart";
@@ -52,6 +53,14 @@ const OrdersPage: React.FC = () => {
     }
   }, [criteria, orders]);
 
+  const handleGesture = (event: HammerInput) => {
+    if (event.type === "panright") {
+      setCriteria(filterType.new);
+    } else {
+      setCriteria(filterType.confirmed);
+    }
+  };
+
   useEffect(() => {
     const today = new Date();
     api
@@ -63,7 +72,16 @@ const OrdersPage: React.FC = () => {
   }, []);
 
   return (
-    <>
+    <Gestures
+      recognizers={{
+        Pan: {
+          events: {
+            panleft: handleGesture,
+            panright: handleGesture,
+          },
+        },
+      }}
+    >
       <AppBar position="fixed">
         <Toolbar>
           <Typography slot="start" variant="h6">
@@ -115,7 +133,7 @@ const OrdersPage: React.FC = () => {
           <BottomNavigationAction label="Confirmados" />
         </BottomNavigation>
       </AppBar>
-    </>
+    </Gestures>
   );
 };
 

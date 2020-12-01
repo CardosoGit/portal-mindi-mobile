@@ -9,7 +9,14 @@ import reportWebVitals from "./reportWebVitals";
 
 import store from "./Store";
 
-const theme = createMuiTheme({});
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: "#18a797",
+      contrastText: "#fff",
+    },
+  },
+});
 
 theme.overrides = {
   ...theme.overrides,
