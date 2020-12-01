@@ -45,14 +45,14 @@ const StatsPage: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
-    const today = new Date();
+    const date = selectedDate || new Date();
     api
-      .get(`portal/orders?date=${format(today, "yyyy-MM-dd")}`)
+      .get(`portal/orders?date=${format(date, "yyyy-MM-dd")}`)
       .then(({ data }) => {
         setOrders(data);
       })
       .catch((err) => alert("Erro ao buscar cardapio"));
-  }, []);
+  }, [selectedDate]);
 
   const count = orders.length;
   const total = orders.reduce((acum, order) => acum + order.total, 0);

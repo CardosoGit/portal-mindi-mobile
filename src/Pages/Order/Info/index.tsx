@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { format } from "date-fns";
 import {
   useHistory,
   useRouteMatch,
@@ -16,6 +17,7 @@ import {
   ListItemText,
 } from "@material-ui/core";
 import { Order } from "Types/Order";
+import { api } from "Services/Api";
 
 // import { Container } from './styles';
 
@@ -30,25 +32,42 @@ const InfoView: React.FC<InfoViewType> = ({ data }) => {
   const {} = useParams();
   const { search } = useLocation();
 
+  const isConfirmed = data.events.some((event) => event.event === "printed");
+
+  function handleConfirm() {
+    api
+      .post(`orders/${data._id}/events`, { name: "printed" })
+      .then(() => {
+        history.push("/pedidos");
+      })
+      .catch((err) => alert("Não foi possível confirmar. Tente novamente"));
+  }
+
   return (
     <View>
+      <Row>Pedido recebido às {format(new Date(data.createdAt), "hh:mm")}</Row>
+      <Divider />
       <Grid container spacing={3} alignItems="center">
         <Grid item xs={6}>
           <ListItemText primary={data.identify.name} secondary="Nome" />
         </Grid>
         <Grid container xs={6} justify="center">
-          <Button variant="contained" color="primary">
-            Imprimir
-          </Button>
+          {!isConfirmed && (
+            <Button onClick={handleConfirm} variant="contained" color="primary">
+              Confirmar
+            </Button>
+          )}
         </Grid>
       </Grid>
       <Divider />
       <List>
         <ListItemText primary={data.identify.phone} secondary="Telefone" />
-        <ListItemText
-          primary={`${data.address?.publicPlace} ${data.address?.number} ${data.address?.neighborhood}`}
-          secondary="Endereço"
-        />
+        {data.address?.number && (
+          <ListItemText
+            primary={`${data.address?.publicPlace} ${data.address?.number} ${data.address?.neighborhood}`}
+            secondary="Endereço"
+          />
+        )}
       </List>
       <Divider />
       <Row>
@@ -64,19 +83,21 @@ const InfoView: React.FC<InfoViewType> = ({ data }) => {
           </Grid>
         </Grid>
       </Row>
-      <Row>
-        <Grid container alignItems="center">
-          <Grid item xs={6}>
-            Taxa de entrega
+      {data.address?.number && (
+        <Row>
+          <Grid container alignItems="center">
+            <Grid item xs={6}>
+              Taxa de entrega
+            </Grid>
+            <Grid container xs={6} justify="flex-end">
+              {data.deliveryFee?.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              })}
+            </Grid>
           </Grid>
-          <Grid container xs={6} justify="flex-end">
-            {data.deliveryFee?.toLocaleString("pt-BR", {
-              style: "currency",
-              currency: "BRL",
-            })}
-          </Grid>
-        </Grid>
-      </Row>
+        </Row>
+      )}
       <Row>
         <Grid container alignItems="center">
           <Grid item xs={6}>

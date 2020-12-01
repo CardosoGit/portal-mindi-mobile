@@ -32,6 +32,11 @@ export interface OrderAddress {
   neighborhood: string;
 }
 
+export interface Event {
+  at: Date;
+  event: string;
+}
+
 export interface Order {
   itens: OrderItem[];
   note: string;
@@ -46,4 +51,5 @@ export interface Order {
   freeTaxMinOrderValue?: number;
   _id: string;
   createdAt: Date;
+  events: Event[];
 }
