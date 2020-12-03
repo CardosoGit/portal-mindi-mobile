@@ -8,6 +8,10 @@ import OrdersPage from "./Pages/Orders";
 import OrderPage from "./Pages/Order";
 import StatsPage from "Pages/Stats";
 import NotFoundPage from "Pages/404";
+import OnboardingPage from "Pages/Onboarding";
+import CreateLinkPage from "Pages/Onboarding/CreateLink";
+import ChooseProductsPage from "Pages/Onboarding/ChooseProducts";
+import FinishPage from "Pages/Onboarding/Finish";
 
 function App() {
   return (
@@ -32,7 +36,15 @@ function App() {
           <Route exact path="/relatorio">
             <StatsPage />
           </Route>
-
+          <Route exact path="/onboarding/link">
+            <CreateLinkPage />
+          </Route>
+          <Route exact path="/onboarding/choose-products">
+            <ChooseProductsPage />
+          </Route>
+          <Route exact path="/onboarding/finish">
+            <FinishPage />
+          </Route>
           <Route component={NotFoundPage} />
         </Switch>
       </Router>

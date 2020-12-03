@@ -112,16 +112,7 @@ const OrdersPage: React.FC = () => {
   }, []);
 
   return (
-    <Gestures
-      recognizers={{
-        Swipe: {
-          events: {
-            swiperight: handleGesture,
-            swipeleft: handleGesture,
-          },
-        },
-      }}
-    >
+    <>
       <AppBar position="fixed">
         <Toolbar>
           <Typography slot="start" variant="h6">
@@ -135,7 +126,8 @@ const OrdersPage: React.FC = () => {
           </IconButton>
         </Toolbar>
       </AppBar>
-      <AppContent bottomPadding>
+
+      <AppContent bottomPadding={true}>
         <SearchField
           onChange={onSearchChange}
           placeholder={"Pesquise por cliente..."}
@@ -183,7 +175,7 @@ const OrdersPage: React.FC = () => {
           <BottomNavigationAction label="Confirmados" />
         </BottomNavigation>
       </AppBar>
-    </Gestures>
+    </>
   );
 };
 

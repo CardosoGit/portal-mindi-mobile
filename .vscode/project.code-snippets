@@ -26,7 +26,7 @@
       "",
       "  return (",
       "    <>",
-      "      <AppBar position=\"static\">",
+      "      <AppBar position=\"fixed\">",
       "        <Toolbar>",
       "          <IconButton color=\"inherit\" style={{ paddingLeft: \"0px\" }} onClick={() => history.goBack()}>",
       "            <ChevronLeftIcon  />",

@@ -1,0 +1,11 @@
+{
+  "Handle Input Change": {
+    "prefix": "react-input-handle-change",
+    "body": [
+      "function handleChange(e: React.ChangeEvent<HTMLInputElement>) {",
+      "    setState({ temperature: e.target.value });",
+      "}"
+    ],
+    "description": "Handle Input Change"
+  }
+}
