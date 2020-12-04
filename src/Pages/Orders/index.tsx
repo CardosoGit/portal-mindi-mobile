@@ -21,6 +21,7 @@ import SearchField from "react-search-field";
 import { Gestures } from "react-gesture-handler";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import HomeIcon from "@material-ui/icons/Home";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import { api } from "Services/Api";
 import { Order } from "Types/Order";
@@ -115,6 +116,13 @@ const OrdersPage: React.FC = () => {
     <>
       <AppBar position="fixed">
         <Toolbar>
+          <IconButton
+            color="inherit"
+            style={{ paddingLeft: "0px" }}
+            onClick={() => window.open(window.location.origin)}
+          >
+            <HomeIcon />
+          </IconButton>
           <Typography slot="start" variant="h6">
             Pedidos
           </Typography>
