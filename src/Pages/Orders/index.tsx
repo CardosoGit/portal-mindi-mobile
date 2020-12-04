@@ -119,7 +119,7 @@ const OrdersPage: React.FC = () => {
           <IconButton
             color="inherit"
             style={{ paddingLeft: "0px" }}
-            onClick={() => (window.location = window.location.origin)}
+            onClick={() => (window.location.href = window.location.origin)}
           >
             <HomeIcon />
           </IconButton>
