@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 interface ViewProps {
   readonly horizontalCenter?: boolean;
+  readonly spaceBetween?: boolean;
 }
 
 interface AppContentProps {
@@ -18,6 +19,13 @@ export const Row = styled.div<ViewProps>`
     `
   display:flex;
   justify-content:center;
+`}
+
+  ${({ spaceBetween }) =>
+    spaceBetween &&
+    `
+  display:flex;
+  justify-content:space-between;
 `}
 `;
 

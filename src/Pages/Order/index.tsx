@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
+import { useReactToPrint } from "react-to-print";
 import {
   useHistory,
   useRouteMatch,
@@ -17,6 +18,7 @@ import {
 import { Gestures } from "react-gesture-handler";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
+import PrintOutlinedIcon from "@material-ui/icons/PrintOutlined";
 import ShoppingBasketOutlinedIcon from "@material-ui/icons/ShoppingBasketOutlined";
 import useQueryString from "use-query-string";
 
@@ -27,6 +29,8 @@ import { api } from "Services/Api";
 import { Order } from "Types/Order";
 import { Tab } from "@material-ui/icons";
 import { queryAllByTestId } from "@testing-library/react";
+import PrintViewView from "./PrintView";
+import PrintView from "./PrintView";
 // import { Container } from './styles';
 
 function updateHistory(path: any) {
@@ -41,6 +45,11 @@ const OrderPage: React.FC = () => {
   const { search, pathname } = useLocation();
   const [query, setQuery] = useQueryString(window.location, updateHistory, {
     parseBooleans: true,
+  });
+
+  const printView = useRef<HTMLDivElement>(null);
+  const handlePrint = useReactToPrint({
+    content: () => printView.current,
   });
 
   const tab = Number(query.tab || 1);
@@ -91,6 +100,14 @@ const OrderPage: React.FC = () => {
             <ChevronLeftIcon />
           </IconButton>
           <Typography variant="h6">Detalhes do Pedido</Typography>
+          <IconButton
+            onClick={handlePrint}
+            color="inherit"
+            style={{ paddingLeft: "0px" }}
+            href="#"
+          >
+            <PrintOutlinedIcon />
+          </IconButton>
         </Toolbar>
       </AppBar>
       <AppContent bottomPadding>
@@ -124,6 +141,19 @@ const OrderPage: React.FC = () => {
           />
         </BottomNavigation>
       </AppBar>
+      {/* <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          zIndex: 99999,
+          background: "white",
+          width: "100%",
+        }}
+      >
+        {order && <PrintView order={order as Order} ref={printView} />}
+      </div> */}
+      <PrintView order={order as Order} ref={printView} />
     </Gestures>
   );
 };
