@@ -153,7 +153,7 @@ const OrderPage: React.FC = () => {
       >
         {order && <PrintView order={order as Order} ref={printView} />}
       </div> */}
-      <PrintView order={order as Order} ref={printView} />
+      {order && <PrintView order={order as Order} ref={printView} />}
     </Gestures>
   );
 };
