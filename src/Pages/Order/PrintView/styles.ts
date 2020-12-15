@@ -13,7 +13,7 @@ export const Container = styled.div`
   top: 0;
   left: 0;
   max-width: 400px;
-  /* transform: translate(-100%, 0); */
+  transform: translate(-100%, 0);
 `;
 
 export const Pedido = styled.span`
