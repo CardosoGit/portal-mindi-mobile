@@ -10,6 +10,7 @@ interface AppContentProps {
 
 export const Row = styled.div<ViewProps>`
   width: 100%;
+  position: relative;
   padding-top: 5px;
   padding-bottom: 5px;
   text-align: left;
@@ -26,6 +27,7 @@ export const View = styled.div`
 `;
 
 export const AppContent = styled.div<AppContentProps>`
+  position: relative;
   padding-left: 16px;
   padding-right: 16px;
   padding-top: 70px;

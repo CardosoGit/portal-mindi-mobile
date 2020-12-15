@@ -23,7 +23,7 @@ api.interceptors.response.use(
     // You can even test for a response code
     // and try a new request before rejecting the promise
     if (error.response.status === 401) {
-      window.location = "/#/login";
+      window.location.href = "/#/login";
     }
     return Promise.reject(error);
   }

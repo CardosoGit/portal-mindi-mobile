@@ -1,4 +1,5 @@
 import React from "react";
+import GraphqlReact, { GraphQL, GraphQLContext } from "graphql-react";
 import "./App.css";
 import Cardapio from "./Pages/Cardapio";
 import ProductPage from "./Pages/Product";
@@ -13,41 +14,45 @@ import CreateLinkPage from "Pages/Onboarding/CreateLink";
 import ChooseProductsPage from "Pages/Onboarding/ChooseProducts";
 import FinishPage from "Pages/Onboarding/Finish";
 
+const graphql = new GraphQL();
+
 function App() {
   return (
     <div className="App">
-      <Router basename="/m">
-        <Switch>
-          <Route exact path="/produto">
-            <ProductPage />
-          </Route>
-          <Route exact path="/categoria">
-            <CategoryPage />
-          </Route>
-          <Route exact path="/">
-            <Cardapio />
-          </Route>
-          <Route exact path="/pedidos">
-            <OrdersPage />
-          </Route>
-          <Route exact path="/pedido">
-            <OrderPage />
-          </Route>
-          <Route exact path="/relatorio">
-            <StatsPage />
-          </Route>
-          <Route exact path="/onboarding/link">
-            <CreateLinkPage />
-          </Route>
-          <Route exact path="/onboarding/choose-products">
-            <ChooseProductsPage />
-          </Route>
-          <Route exact path="/onboarding/finish">
-            <FinishPage />
-          </Route>
-          <Route component={NotFoundPage} />
-        </Switch>
-      </Router>
+      <GraphQLContext.Provider value={graphql}>
+        <Router basename="/m">
+          <Switch>
+            <Route exact path="/produto">
+              <ProductPage />
+            </Route>
+            <Route exact path="/categoria">
+              <CategoryPage />
+            </Route>
+            <Route exact path="/">
+              <Cardapio />
+            </Route>
+            <Route exact path="/pedidos">
+              <OrdersPage />
+            </Route>
+            <Route exact path="/pedido">
+              <OrderPage />
+            </Route>
+            <Route exact path="/relatorio">
+              <StatsPage />
+            </Route>
+            <Route exact path="/onboarding/link">
+              <CreateLinkPage />
+            </Route>
+            <Route exact path="/onboarding/choose-products">
+              <ChooseProductsPage />
+            </Route>
+            <Route exact path="/onboarding/finish">
+              <FinishPage />
+            </Route>
+            <Route component={NotFoundPage} />
+          </Switch>
+        </Router>
+      </GraphQLContext.Provider>
     </div>
   );
 }
