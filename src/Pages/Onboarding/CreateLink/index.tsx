@@ -24,7 +24,6 @@ import { AppContent, Row } from "Theme";
 import { api } from "Services/Api";
 import { fetchOptionsOverride } from "Services/GraphqlRequest";
 import Loading from "Components/Loading";
-import { JSDocNonNullableType } from "typescript";
 
 // import { Container } from './styles';
 

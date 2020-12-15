@@ -81,7 +81,9 @@ const PrintView = React.forwardRef<HTMLDivElement, PrintViewType>(
           {order.itens.map((item) => (
             <React.Fragment>
               <PrintRow spaceBetween>
-                <span>{item.productDescription}</span>
+                <span>
+                  {item.qtd}x {item.productDescription}
+                </span>
                 <span>
                   {item.price.toLocaleString("pt-BR", {
                     style: "currency",
