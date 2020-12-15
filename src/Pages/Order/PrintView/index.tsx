@@ -7,12 +7,13 @@ import {
   useParams,
 } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, View } from "Theme";
+import { View } from "Theme";
 
-import { Container, Divider, Pedido, Note } from "./styles";
+import { Container, Divider, Pedido, Note, PrintRow } from "./styles";
 import { Order } from "Types/Order";
 import PrintQuestion from "./PrintQuestion";
 import { GroupSharp } from "@material-ui/icons";
+import { getPaymentMethod } from "Utils/indes";
 
 // const order: Order = {
 //   createdAt: new Date(),
@@ -50,24 +51,32 @@ const PrintView = React.forwardRef<HTMLDivElement, PrintViewType>(
     const { search } = useLocation();
     const searchParamValue = new URLSearchParams(search).get("searchParamName");
 
+    const haveAdress = !!order.address?.number;
+
     return (
       <Container>
         <View ref={ref}>
-          <Row horizontalCenter>
+          <PrintRow horizontalCenter>
             <Pedido>Pedido</Pedido>
-          </Row>
+          </PrintRow>
           <Divider />
-          <Row>
+          <PrintRow>
             <span>{format(new Date(order.createdAt), "dd/MM/yyyy HH:mm")}</span>
-          </Row>
-          <Row spaceBetween>
+          </PrintRow>
+          <PrintRow spaceBetween>
             <span>{order.identify.name}</span>
             <span>{order.identify.phone}</span>
-          </Row>
+          </PrintRow>
+          <Divider />
+          {haveAdress && (
+            <PrintRow>
+              <span>{`Endereço: ${order.address?.publicPlace}, ${order.address?.number}, ${order.address?.neighborhood}`}</span>
+            </PrintRow>
+          )}
           <Divider />
           {order.itens.map((item) => (
             <React.Fragment>
-              <Row spaceBetween>
+              <PrintRow spaceBetween>
                 <span>{item.productDescription}</span>
                 <span>
                   {item.price.toLocaleString("pt-BR", {
@@ -75,7 +84,7 @@ const PrintView = React.forwardRef<HTMLDivElement, PrintViewType>(
                     currency: "BRL",
                   })}
                 </span>
-              </Row>
+              </PrintRow>
               {item.groups.map((groups) => (
                 <PrintQuestion
                   title={groups[0].group}
@@ -85,13 +94,8 @@ const PrintView = React.forwardRef<HTMLDivElement, PrintViewType>(
               {item.note && <Note>{item.note}</Note>}
             </React.Fragment>
           ))}
-
           <Divider />
-          <Row>
-            <span>{`${order.address?.publicPlace}, ${order.address?.number}, ${order.address?.neighborhood}`}</span>
-          </Row>
-          <Divider />
-          <Row spaceBetween>
+          <PrintRow spaceBetween>
             <span>Total de produtos:</span>
             <span>
               {order.totalProducts.toLocaleString("pt-BR", {
@@ -99,17 +103,21 @@ const PrintView = React.forwardRef<HTMLDivElement, PrintViewType>(
                 currency: "BRL",
               })}
             </span>
-          </Row>
-          <Row spaceBetween>
-            <span>Taxa de entrega:</span>
-            <span>
-              {order.deliveryFee?.toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              })}
-            </span>
-          </Row>
-          <Row spaceBetween>
+          </PrintRow>
+          {haveAdress && (
+            <PrintRow spaceBetween>
+              <span>Taxa de entrega:</span>
+              <span>
+                {order.deliveryFee === 0
+                  ? "Grátis"
+                  : order.deliveryFee?.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
+              </span>
+            </PrintRow>
+          )}
+          <PrintRow spaceBetween>
             <span>Total:</span>
             <span>
               {order.total.toLocaleString("pt-BR", {
@@ -117,8 +125,24 @@ const PrintView = React.forwardRef<HTMLDivElement, PrintViewType>(
                 currency: "BRL",
               })}
             </span>
-          </Row>
-          {order.note && <Row>Obs: {order.note}</Row>}
+          </PrintRow>
+          <Divider />
+          {haveAdress && (
+            <PrintRow>
+              Pagamento com{" "}
+              {getPaymentMethod(order.payment?.paymentMethod as string)}
+            </PrintRow>
+          )}
+          {haveAdress && order.payment?.change && (
+            <PrintRow>
+              Troco para{" "}
+              {order.payment.change.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              })}
+            </PrintRow>
+          )}
+          {order.note && <PrintRow>Obs: {order.note}</PrintRow>}
         </View>
       </Container>
     );

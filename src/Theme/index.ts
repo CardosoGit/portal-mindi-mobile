@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-interface ViewProps {
+interface RowProps {
   readonly horizontalCenter?: boolean;
   readonly spaceBetween?: boolean;
 }
@@ -9,7 +9,7 @@ interface AppContentProps {
   readonly bottomPadding?: boolean;
 }
 
-export const Row = styled.div<ViewProps>`
+export const Row = styled.div<RowProps>`
   width: 100%;
   position: relative;
   padding-top: 5px;

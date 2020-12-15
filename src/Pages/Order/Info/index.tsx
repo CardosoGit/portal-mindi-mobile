@@ -18,6 +18,7 @@ import {
 } from "@material-ui/core";
 import { Order } from "Types/Order";
 import { api } from "Services/Api";
+import { getPaymentMethod } from "Utils/indes";
 
 // import { Container } from './styles';
 
@@ -45,7 +46,7 @@ const InfoView: React.FC<InfoViewType> = ({ data }) => {
 
   return (
     <View>
-      <Row>Pedido recebido às {format(new Date(data.createdAt), "hh:mm")}</Row>
+      <Row>Pedido recebido às {format(new Date(data.createdAt), "HH:mm")}</Row>
       <Divider />
       <Grid container spacing={3} alignItems="center">
         <Grid item xs={6}>
@@ -111,6 +112,22 @@ const InfoView: React.FC<InfoViewType> = ({ data }) => {
           </Grid>
         </Grid>
       </Row>
+      <Divider />
+      {data.address?.number && (
+        <Row>
+          Pagamento com{" "}
+          {getPaymentMethod(data.payment?.paymentMethod as string)}
+        </Row>
+      )}
+      {data.address?.number && data.payment?.change && (
+        <Row>
+          Troco para{" "}
+          {data.payment.change.toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+          })}
+        </Row>
+      )}
       {data.note && <Row>Observação do pedido: {data.note}</Row>}
     </View>
   );
