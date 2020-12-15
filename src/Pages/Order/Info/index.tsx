@@ -50,7 +50,7 @@ const InfoView: React.FC<InfoViewType> = ({ data }) => {
       <Divider />
       <Grid container spacing={3} alignItems="center">
         <Grid item xs={6}>
-          <ListItemText primary={data.identify.name} secondary="Nome" />
+          <ListItemText secondary={data.identify.name} primary="Nome" />
         </Grid>
         <Grid container xs={6} justify="center">
           {!isConfirmed && (
@@ -62,11 +62,15 @@ const InfoView: React.FC<InfoViewType> = ({ data }) => {
       </Grid>
       <Divider />
       <List>
-        <ListItemText primary={data.identify.phone} secondary="Telefone" />
+        <ListItemText secondary={data.identify.phone} primary="Telefone" />
         {data.address?.number && (
           <ListItemText
-            primary={`${data.address?.publicPlace} ${data.address?.number} ${data.address?.neighborhood}`}
-            secondary="Endereço"
+            secondary={`${data.address?.publicPlace}, ${
+              data.address?.number
+            }, ${data.address?.neighborhood}. ${
+              data.address.adjunct ? data.address.adjunct + "- " : ""
+            }${data.address.landmark || ""}`}
+            primary="Endereço"
           />
         )}
       </List>

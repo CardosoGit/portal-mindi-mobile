@@ -30,6 +30,8 @@ export interface OrderAddress {
   publicPlace: string;
   number: string;
   neighborhood: string;
+  adjunct: string;
+  landmark: string;
 }
 
 export interface Event {

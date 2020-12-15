@@ -70,7 +70,11 @@ const PrintView = React.forwardRef<HTMLDivElement, PrintViewType>(
           <Divider />
           {haveAdress && (
             <PrintRow>
-              <span>{`Endereço: ${order.address?.publicPlace}, ${order.address?.number}, ${order.address?.neighborhood}`}</span>
+              <span>{`Endereço: ${order.address?.publicPlace}, ${
+                order.address?.number
+              }, ${order.address?.neighborhood}. ${
+                order.address?.adjunct ? order.address?.adjunct + "- " : ""
+              }${order.address?.landmark || ""}`}</span>
             </PrintRow>
           )}
           <Divider />
