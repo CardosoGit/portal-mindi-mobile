@@ -19,7 +19,7 @@ import {
   ListItemText,
 } from "@material-ui/core";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import { format } from "date-fns";
+import { format,isToday } from "date-fns";
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import ptBrLocale from "date-fns/locale/pt-BR";
@@ -45,6 +45,7 @@ const StatsPage: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
+    console.log(selectedDate);
     const date = selectedDate || new Date();
     api
       .get(`portal/orders?date=${format(date, "yyyy-MM-dd")}`)
@@ -53,6 +54,11 @@ const StatsPage: React.FC = () => {
       })
       .catch((err) => alert("Erro ao buscar cardapio"));
   }, [selectedDate]);
+
+  function ehHoje(date:Date|null) {
+
+    return isToday(date as Date)
+  }
 
   const count = orders.length;
   const total = orders.reduce((acum, order) => acum + order.total, 0);
@@ -85,30 +91,38 @@ const StatsPage: React.FC = () => {
             />
           </MuiPickersUtilsProvider>
         </Row>
-        <List>
-          <ListItem>
-            <ListItemText primary="Pedidos recebidos" />
-            <ListItemSecondaryAction>{count}</ListItemSecondaryAction>
-          </ListItem>
-          <ListItem>
-            <ListItemText primary="Total de pedidos" />
-            <ListItemSecondaryAction>
-              {total.toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              })}
-            </ListItemSecondaryAction>
-          </ListItem>
-          <ListItem>
-            <ListItemText primary="Ticket médio" />
-            <ListItemSecondaryAction>
-              {(total / count).toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              })}
-            </ListItemSecondaryAction>
-          </ListItem>
-        </List>
+        {ehHoje(selectedDate) === true && count === 0 && (
+          <Row horizontalCenter>Você ainda não recebeu pedido hoje.</Row>
+        )}
+        {count === 0 && ehHoje(selectedDate) === false && (
+          <Row horizontalCenter>Não houve nenhum pedido neste dia.</Row>
+        )}
+        {count > 0 && (
+          <List>
+            <ListItem>
+              <ListItemText primary="Pedidos recebidos" />
+              <ListItemSecondaryAction>{count}</ListItemSecondaryAction>
+            </ListItem>
+            <ListItem>
+              <ListItemText primary="Total de pedidos" />
+              <ListItemSecondaryAction>
+                {total.toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                })}
+              </ListItemSecondaryAction>
+            </ListItem>
+            <ListItem>
+              <ListItemText primary="Ticket médio" />
+              <ListItemSecondaryAction>
+                {(total / count).toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                })}
+              </ListItemSecondaryAction>
+            </ListItem>
+          </List>
+        )}
       </AppContent>
     </>
   );
