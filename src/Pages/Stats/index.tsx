@@ -92,10 +92,10 @@ const StatsPage: React.FC = () => {
           </MuiPickersUtilsProvider>
         </Row>
         {ehHoje(selectedDate) === true && count === 0 && (
-          <Row horizontalCenter>Você ainda não recebeu pedido hoje.</Row>
+          <Row horizontalCenter>Você ainda não recebeu pedidos hoje.</Row>
         )}
         {count === 0 && ehHoje(selectedDate) === false && (
-          <Row horizontalCenter>Não houve nenhum pedido neste dia.</Row>
+          <Row horizontalCenter>Você não recebeu pedidos neste dia.</Row>
         )}
         {count > 0 && (
           <List>
