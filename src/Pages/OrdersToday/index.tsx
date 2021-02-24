@@ -16,9 +16,13 @@ import {
   BottomNavigation,
   BottomNavigationAction,
 } from "@material-ui/core";
+import SearchBar from "react-js-search";
 import SearchField from "react-search-field";
+import { Gestures } from "react-gesture-handler";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import HomeIcon from "@material-ui/icons/Home";
+import BarChartIcon from "@material-ui/icons/BarChart";
 import { api } from "Services/Api";
 import { Order } from "Types/Order";
 import { AppContent, Row } from "Theme";
@@ -31,7 +35,7 @@ enum filterType {
   confirmed = 1,
 }
 
-const OrdersPage: React.FC = () => {
+const OrdersTodayPage: React.FC = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -39,9 +43,26 @@ const OrdersPage: React.FC = () => {
   const [criteria, setCriteria] = useState<number>(filterType.new);
   const [filterText, setFilterText] = useState<string>("");
 
-  const { search } = useLocation();
+  const byStatus = (criteria: any) => (order: Order) => {
+    switch (criteria) {
+      case filterType.new:
+        return order.events[order.events.length - 1].event === "created";
 
-  const dateParam = new URLSearchParams(search).get("date");
+      case filterType.confirmed:
+        return order.events[order.events.length - 1].event !== "created";
+
+      default:
+        return true;
+    }
+  };
+
+  const handleGesture = (event: HammerInput) => {
+    if (event.type === "swiperight") {
+      setCriteria(filterType.new);
+    } else {
+      setCriteria(filterType.confirmed);
+    }
+  };
 
   const onSearchChange = (event: string) => {
     setFilterText(event);
@@ -56,10 +77,34 @@ const OrdersPage: React.FC = () => {
 
   const getOrders = async (): Promise<Order[]> => {
     const today = new Date();
-    const date = dateParam || format(today, "yyyy-MM-dd");
-    const { data } = await api.get(`portal/orders?date=${date}`);
+    const { data } = await api.get(
+      `portal/orders?date=${format(today, "yyyy-MM-dd")}`
+    );
     return data;
   };
+
+  const playAlert = () => {
+    let src =
+      "//s3.amazonaws.com/appforest_uf/f1598429253106x343351561325749800/apple_msg_tone.mp3";
+
+    for (let x = 1; x <= 10; x++) {
+      setTimeout(() => {
+        let audio = new Audio(src);
+        audio.play();
+      }, 100 * x);
+    }
+  };
+
+  useInterval(() => {
+    getOrders()
+      .then((fetchedOrders) => {
+        if (fetchedOrders.length > orders.length) {
+          playAlert();
+        }
+        setOrders(fetchedOrders);
+      })
+      .catch((err) => alert("Erro ao buscar Pedidos"));
+  }, 30000);
 
   useEffect(() => {
     getOrders()
@@ -75,7 +120,7 @@ const OrdersPage: React.FC = () => {
             <ChevronLeftIcon />
           </IconButton>
           <Typography slot="start" variant="h6">
-            Pedidos
+            Acompanhando pedidos
           </Typography>
         </Toolbar>
       </AppBar>
@@ -87,6 +132,7 @@ const OrdersPage: React.FC = () => {
         />
         <List>
           {orders
+            .filter(byStatus(criteria))
             .filter(byName(filterText))
             .sort((a, b) =>
               differenceInSeconds(new Date(b.createdAt), new Date(a.createdAt))
@@ -113,12 +159,23 @@ const OrdersPage: React.FC = () => {
               </ListItem>
             ))}
         </List>
-        {orders.length === 0 && (
-          <Row horizontalCenter>Nenhum pedido recebido.</Row>
-        )}
+        {criteria === filterType.new &&
+          orders.filter(byStatus(criteria)).length === 0 && (
+            <Row horizontalCenter>Aguardando novos pedidos...</Row>
+          )}
       </AppContent>
+      <AppBar position="fixed" style={{ top: "auto", bottom: 0 }}>
+        <BottomNavigation
+          showLabels
+          value={criteria}
+          onChange={(event, newValue) => setCriteria(newValue)}
+        >
+          <BottomNavigationAction label="Novos" />
+          <BottomNavigationAction label="Confirmados" />
+        </BottomNavigation>
+      </AppBar>
     </>
   );
 };
 
-export default OrdersPage;
+export default OrdersTodayPage;

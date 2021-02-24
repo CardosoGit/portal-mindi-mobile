@@ -13,6 +13,8 @@ import OnboardingPage from "Pages/Onboarding";
 import CreateLinkPage from "Pages/Onboarding/CreateLink";
 import ChooseProductsPage from "Pages/Onboarding/ChooseProducts";
 import FinishPage from "Pages/Onboarding/Finish";
+import HomePage from "Pages/Home";
+import OrdersTodayPage from "Pages/OrdersToday";
 
 const graphql = new GraphQL();
 
@@ -29,10 +31,13 @@ function App() {
               <CategoryPage />
             </Route>
             <Route exact path="/">
-              <Cardapio />
+              <HomePage />
             </Route>
             <Route exact path="/pedidos">
               <OrdersPage />
+            </Route>
+            <Route exact path="/pedidos-hoje">
+              <OrdersTodayPage />
             </Route>
             <Route exact path="/pedido">
               <OrderPage />
