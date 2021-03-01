@@ -72,7 +72,7 @@ const HomePage: React.FC = () => {
               onClick={() => history.push(`/relatorio`)}
             >
               <ListItemText
-                primary={"Relatórios"}
+                primary={"Relatório por dia"}
                 secondary={"Veja o que foi vendido nos outros dias"}
               />
               <ListItemSecondaryAction>

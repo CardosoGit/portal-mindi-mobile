@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   useHistory,
   useRouteMatch,
@@ -30,6 +30,11 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import { AppContent, Row } from "Theme";
 import { api } from "Services/Api";
 import { Order } from "Types/Order";
+import BoxResume from "Components/BoxResume";
+import getListByCategories from "./getListByCategories";
+import getListByProducts from "./getListByProducts";
+import getListByPaymentMethod from "./getListByPaymentMethod";
+import getListByDeliveryType from "./getListByDeliveryType";
 
 // import { Container } from './styles';
 
@@ -78,7 +83,31 @@ const StatsPage: React.FC = () => {
   }
 
   const count = orders.length;
+  const faturamentoProdutos = orders.reduce(
+    (acum, order) => acum + order.totalProducts,
+    0
+  );
+  const taxDelivery = orders.reduce(
+    (acum, order) => acum + (order.deliveryFee || 0),
+    0
+  );
   const total = orders.reduce((acum, order) => acum + order.total, 0);
+
+  const byCategoriesList = useCallback(() => {
+    return getListByCategories(orders);
+  }, [orders]);
+
+  const byProductsList = useCallback(() => {
+    return getListByProducts(orders);
+  }, [orders]);
+
+  const byPaymentMethodList = useCallback(() => {
+    return getListByPaymentMethod(orders);
+  }, [orders]);
+
+  const byDeliveryType = useCallback(() => {
+    return getListByDeliveryType(orders);
+  }, [orders]);
 
   return (
     <>
@@ -87,7 +116,7 @@ const StatsPage: React.FC = () => {
           <IconButton color="inherit" onClick={() => history.goBack()}>
             <ChevronLeftIcon />
           </IconButton>
-          <Typography variant="h6">Relatório</Typography>
+          <Typography variant="h6">Relatório por dia</Typography>
         </Toolbar>
       </AppBar>
 
@@ -142,7 +171,25 @@ const StatsPage: React.FC = () => {
                   </ListItem>
                 </Paper>
                 <ListItem>
-                  <ListItemText primary="Faturamento" />
+                  <ListItemText primary="Total em produtos" />
+                  <ListItemSecondaryAction>
+                    {faturamentoProdutos.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
+                  </ListItemSecondaryAction>
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary="Taxas de entrega" />
+                  <ListItemSecondaryAction>
+                    {taxDelivery.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
+                  </ListItemSecondaryAction>
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary="Faturamento Total" />
                   <ListItemSecondaryAction>
                     {total.toLocaleString("pt-BR", {
                       style: "currency",
@@ -151,9 +198,9 @@ const StatsPage: React.FC = () => {
                   </ListItemSecondaryAction>
                 </ListItem>
                 <ListItem>
-                  <ListItemText primary="Ticket médio" />
+                  <ListItemText primary="Ticket médio (produtos)" />
                   <ListItemSecondaryAction>
-                    {(total / count).toLocaleString("pt-BR", {
+                    {(faturamentoProdutos / count).toLocaleString("pt-BR", {
                       style: "currency",
                       currency: "BRL",
                     })}
@@ -161,6 +208,16 @@ const StatsPage: React.FC = () => {
                 </ListItem>
               </List>
             )}
+            <BoxResume title="Por categorias" list={byCategoriesList()} />
+            <BoxResume title="Por produtos" list={byProductsList()} />
+            <BoxResume
+              title="Por método de entrega"
+              list={byDeliveryType()}
+            />
+            <BoxResume
+              title="Por forma de pagamento"
+              list={byPaymentMethodList()}
+            />
           </>
         )}
       </AppContent>
