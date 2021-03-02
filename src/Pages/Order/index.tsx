@@ -34,7 +34,7 @@ import PrintView from "./PrintView";
 // import { Container } from './styles';
 
 function updateHistory(path: any) {
-  window.history.pushState(null, document.title, path);
+  window.history.replaceState(null, document.title, path);
 }
 
 const OrderPage: React.FC = () => {
@@ -92,11 +92,7 @@ const OrderPage: React.FC = () => {
     >
       <AppBar position="fixed">
         <Toolbar>
-          <IconButton
-            color="inherit"
-            style={{ paddingLeft: "0px" }}
-            onClick={() => history.replace("/pedidos")}
-          >
+          <IconButton color="inherit" onClick={() => history.goBack()}>
             <ChevronLeftIcon />
           </IconButton>
           <Typography variant="h6">Detalhes do Pedido</Typography>
