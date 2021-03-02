@@ -13,6 +13,8 @@ import OnboardingPage from "Pages/Onboarding";
 import CreateLinkPage from "Pages/Onboarding/CreateLink";
 import ChooseProductsPage from "Pages/Onboarding/ChooseProducts";
 import FinishPage from "Pages/Onboarding/Finish";
+import HomePage from "Pages/Home";
+import OrdersTodayPage from "Pages/OrdersToday";
 
 const graphql = new GraphQL();
 
@@ -22,17 +24,20 @@ function App() {
       <GraphQLContext.Provider value={graphql}>
         <Router basename="/m">
           <Switch>
-            <Route exact path="/produto">
+            {/* <Route exact path="/produto">
               <ProductPage />
             </Route>
             <Route exact path="/categoria">
               <CategoryPage />
-            </Route>
+            </Route> */}
             <Route exact path="/">
-              <Cardapio />
+              <HomePage />
             </Route>
             <Route exact path="/pedidos">
               <OrdersPage />
+            </Route>
+            <Route exact path="/pedidos-hoje">
+              <OrdersTodayPage />
             </Route>
             <Route exact path="/pedido">
               <OrderPage />
@@ -40,7 +45,7 @@ function App() {
             <Route exact path="/relatorio">
               <StatsPage />
             </Route>
-            <Route exact path="/onboarding/link">
+            {/* <Route exact path="/onboarding/link">
               <CreateLinkPage />
             </Route>
             <Route exact path="/onboarding/choose-products">
@@ -48,7 +53,7 @@ function App() {
             </Route>
             <Route exact path="/onboarding/finish">
               <FinishPage />
-            </Route>
+            </Route> */}
             <Route component={NotFoundPage} />
           </Switch>
         </Router>

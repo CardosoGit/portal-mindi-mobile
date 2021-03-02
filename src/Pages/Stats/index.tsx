@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   useHistory,
   useRouteMatch,
@@ -17,18 +17,30 @@ import {
   ListItemAvatar,
   ListItemSecondaryAction,
   ListItemText,
+  Paper,
 } from "@material-ui/core";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import { format, isToday } from "date-fns";
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import ptBrLocale from "date-fns/locale/pt-BR";
+import useQueryString from "use-query-string";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
 import { AppContent, Row } from "Theme";
 import { api } from "Services/Api";
 import { Order } from "Types/Order";
+import BoxResume from "Components/BoxResume";
+import getListByCategories from "./getListByCategories";
+import getListByProducts from "./getListByProducts";
+import getListByPaymentMethod from "./getListByPaymentMethod";
+import getListByDeliveryType from "./getListByDeliveryType";
 
 // import { Container } from './styles';
+
+function updateHistory(path: any) {
+  window.history.replaceState(null, document.title, path);
+}
 
 const StatsPage: React.FC = () => {
   const history = useHistory();
@@ -38,18 +50,27 @@ const StatsPage: React.FC = () => {
   const { search } = useLocation();
   const searchParamValue = new URLSearchParams(search).get("searchParamName");
 
+  const [query, setQuery] = useQueryString(window.location, updateHistory, {
+    parseBooleans: true,
+  });
+
   const [selectedDate, handleDateChange] = React.useState<Date | null>(
-    new Date()
+    query.date ? new Date(`${query.date}T00:00:00-03:00`) : new Date()
   );
+
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
     setIsLoading(true);
-    const date = selectedDate || new Date();
+    const date = format(selectedDate || new Date(), "yyyy-MM-dd");
+    setQuery({
+      date: date,
+    });
+
     api
-      .get(`portal/orders?date=${format(date, "yyyy-MM-dd")}`)
+      .get(`portal/orders?date=${date}`)
       .then(({ data }) => {
         setOrders(data);
         setIsLoading(false);
@@ -62,20 +83,40 @@ const StatsPage: React.FC = () => {
   }
 
   const count = orders.length;
+  const faturamentoProdutos = orders.reduce(
+    (acum, order) => acum + order.totalProducts,
+    0
+  );
+  const taxDelivery = orders.reduce(
+    (acum, order) => acum + (order.deliveryFee || 0),
+    0
+  );
   const total = orders.reduce((acum, order) => acum + order.total, 0);
+
+  const byCategoriesList = useCallback(() => {
+    return getListByCategories(orders);
+  }, [orders]);
+
+  const byProductsList = useCallback(() => {
+    return getListByProducts(orders);
+  }, [orders]);
+
+  const byPaymentMethodList = useCallback(() => {
+    return getListByPaymentMethod(orders);
+  }, [orders]);
+
+  const byDeliveryType = useCallback(() => {
+    return getListByDeliveryType(orders);
+  }, [orders]);
 
   return (
     <>
       <AppBar position="fixed">
         <Toolbar>
-          <IconButton
-            color="inherit"
-            style={{ paddingLeft: "0px" }}
-            onClick={() => history.goBack()}
-          >
+          <IconButton color="inherit" onClick={() => history.goBack()}>
             <ChevronLeftIcon />
           </IconButton>
-          <Typography variant="h6">Relatório</Typography>
+          <Typography variant="h6">Relatório por dia</Typography>
         </Toolbar>
       </AppBar>
 
@@ -104,30 +145,80 @@ const StatsPage: React.FC = () => {
             )}
 
             {count > 0 && (
-              <List>
-                <ListItem>
-                  <ListItemText primary="Pedidos recebidos" />
-                  <ListItemSecondaryAction>{count}</ListItemSecondaryAction>
-                </ListItem>
-                <ListItem>
-                  <ListItemText primary="Total de pedidos" />
-                  <ListItemSecondaryAction>
-                    {total.toLocaleString("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                    })}
-                  </ListItemSecondaryAction>
-                </ListItem>
-                <ListItem>
-                  <ListItemText primary="Ticket médio" />
-                  <ListItemSecondaryAction>
-                    {(total / count).toLocaleString("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                    })}
-                  </ListItemSecondaryAction>
-                </ListItem>
-              </List>
+              <>
+                <List>
+                  <Paper elevation={3}>
+                    <ListItem
+                      style={{ cursor: "pointer" }}
+                      onClick={() =>
+                        history.push(
+                          `/pedidos?date=${format(
+                            selectedDate as Date,
+                            "yyyy-MM-dd"
+                          )}`
+                        )
+                      }
+                    >
+                      <ListItemText
+                        primary={`Você recebeu ${count} pedidos`}
+                        secondary={"Clique aqui para ver"}
+                      />
+
+                      <ListItemSecondaryAction>
+                        <IconButton color="primary">
+                          <ChevronRightIcon />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                  </Paper>
+                  <ListItem>
+                    <ListItemText primary="Total em produtos" />
+                    <ListItemSecondaryAction>
+                      {faturamentoProdutos.toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Taxas de entrega" />
+                    <ListItemSecondaryAction>
+                      {taxDelivery.toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Faturamento Total" />
+                    <ListItemSecondaryAction>
+                      {total.toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Ticket médio (produtos)" />
+                    <ListItemSecondaryAction>
+                      {(faturamentoProdutos / count).toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </List>
+                <BoxResume title="Por categorias" list={byCategoriesList()} />
+                <BoxResume title="Por produtos" list={byProductsList()} />
+                <BoxResume
+                  title="Por método de entrega"
+                  list={byDeliveryType()}
+                />
+                <BoxResume
+                  title="Por forma de pagamento"
+                  list={byPaymentMethodList()}
+                />
+              </>
             )}
           </>
         )}
