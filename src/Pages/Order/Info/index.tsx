@@ -39,7 +39,7 @@ const InfoView: React.FC<InfoViewType> = ({ data }) => {
     api
       .post(`orders/${data._id}/events`, { name: "printed" })
       .then(() => {
-        history.push("/pedidos");
+        history.push("/pedidos-hoje");
       })
       .catch((err) => alert("Não foi possível confirmar. Tente novamente"));
   }
