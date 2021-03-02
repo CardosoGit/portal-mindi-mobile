@@ -145,79 +145,81 @@ const StatsPage: React.FC = () => {
             )}
 
             {count > 0 && (
-              <List>
-                <Paper elevation={3}>
-                  <ListItem
-                    style={{ cursor: "pointer" }}
-                    onClick={() =>
-                      history.push(
-                        `/pedidos?date=${format(
-                          selectedDate as Date,
-                          "yyyy-MM-dd"
-                        )}`
-                      )
-                    }
-                  >
-                    <ListItemText
-                      primary={`Você recebeu ${count} pedidos`}
-                      secondary={"Clique aqui para ver"}
-                    />
+              <>
+                <List>
+                  <Paper elevation={3}>
+                    <ListItem
+                      style={{ cursor: "pointer" }}
+                      onClick={() =>
+                        history.push(
+                          `/pedidos?date=${format(
+                            selectedDate as Date,
+                            "yyyy-MM-dd"
+                          )}`
+                        )
+                      }
+                    >
+                      <ListItemText
+                        primary={`Você recebeu ${count} pedidos`}
+                        secondary={"Clique aqui para ver"}
+                      />
 
+                      <ListItemSecondaryAction>
+                        <IconButton color="primary">
+                          <ChevronRightIcon />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                  </Paper>
+                  <ListItem>
+                    <ListItemText primary="Total em produtos" />
                     <ListItemSecondaryAction>
-                      <IconButton color="primary">
-                        <ChevronRightIcon />
-                      </IconButton>
+                      {faturamentoProdutos.toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
                     </ListItemSecondaryAction>
                   </ListItem>
-                </Paper>
-                <ListItem>
-                  <ListItemText primary="Total em produtos" />
-                  <ListItemSecondaryAction>
-                    {faturamentoProdutos.toLocaleString("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                    })}
-                  </ListItemSecondaryAction>
-                </ListItem>
-                <ListItem>
-                  <ListItemText primary="Taxas de entrega" />
-                  <ListItemSecondaryAction>
-                    {taxDelivery.toLocaleString("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                    })}
-                  </ListItemSecondaryAction>
-                </ListItem>
-                <ListItem>
-                  <ListItemText primary="Faturamento Total" />
-                  <ListItemSecondaryAction>
-                    {total.toLocaleString("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                    })}
-                  </ListItemSecondaryAction>
-                </ListItem>
-                <ListItem>
-                  <ListItemText primary="Ticket médio (produtos)" />
-                  <ListItemSecondaryAction>
-                    {(faturamentoProdutos / count).toLocaleString("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                    })}
-                  </ListItemSecondaryAction>
-                </ListItem>
-              </List>
+                  <ListItem>
+                    <ListItemText primary="Taxas de entrega" />
+                    <ListItemSecondaryAction>
+                      {taxDelivery.toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Faturamento Total" />
+                    <ListItemSecondaryAction>
+                      {total.toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Ticket médio (produtos)" />
+                    <ListItemSecondaryAction>
+                      {(faturamentoProdutos / count).toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </List>
+                <BoxResume title="Por categorias" list={byCategoriesList()} />
+                <BoxResume title="Por produtos" list={byProductsList()} />
+                <BoxResume
+                  title="Por método de entrega"
+                  list={byDeliveryType()}
+                />
+                <BoxResume
+                  title="Por forma de pagamento"
+                  list={byPaymentMethodList()}
+                />
+              </>
             )}
-            <BoxResume title="Por categorias" list={byCategoriesList()} />
-            <BoxResume title="Por produtos" list={byProductsList()} />
-            <BoxResume
-              title="Por método de entrega"
-              list={byDeliveryType()}
-            />
-            <BoxResume
-              title="Por forma de pagamento"
-              list={byPaymentMethodList()}
-            />
           </>
         )}
       </AppContent>
