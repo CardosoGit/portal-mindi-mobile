@@ -6,20 +6,23 @@ export default function getListByProducts(orders: Order[]) {
     .map((item) => ({
       product: item.productDescription.split("-").slice(1).join(" "),
       price: item.price,
+      qtd: item.qtd,
     }))
     .reduce((acuml: any, item) => {
       return {
         ...acuml,
         [item.product]: acuml[item.product]
           ? {
-              description: `${item.product} (${acuml[item.product].qtd + 1})`,
+              description: `${item.product} (${
+                acuml[item.product].qtd + item.qtd
+              })`,
               value: acuml[item.product].value + item.price,
-              qtd: acuml[item.product].qtd + 1,
+              qtd: acuml[item.product].qtd + item.qtd,
             }
           : {
-              description: item.product + " (1)",
+              description: item.product + ` (${item.qtd})`,
               value: item.price,
-              qtd: 1,
+              qtd: item.qtd,
             },
       };
     }, {});
