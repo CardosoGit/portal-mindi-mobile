@@ -24,12 +24,12 @@ function App() {
       <GraphQLContext.Provider value={graphql}>
         <Router basename="/m">
           <Switch>
-            <Route exact path="/produto">
+            {/* <Route exact path="/produto">
               <ProductPage />
             </Route>
             <Route exact path="/categoria">
               <CategoryPage />
-            </Route>
+            </Route> */}
             <Route exact path="/">
               <HomePage />
             </Route>
@@ -45,7 +45,7 @@ function App() {
             <Route exact path="/relatorio">
               <StatsPage />
             </Route>
-            <Route exact path="/onboarding/link">
+            {/* <Route exact path="/onboarding/link">
               <CreateLinkPage />
             </Route>
             <Route exact path="/onboarding/choose-products">
@@ -53,7 +53,7 @@ function App() {
             </Route>
             <Route exact path="/onboarding/finish">
               <FinishPage />
-            </Route>
+            </Route> */}
             <Route component={NotFoundPage} />
           </Switch>
         </Router>
