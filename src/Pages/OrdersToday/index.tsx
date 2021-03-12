@@ -103,7 +103,13 @@ const OrdersTodayPage: React.FC = () => {
         }
         setOrders(fetchedOrders);
       })
-      .catch((err) => alert("Erro ao buscar Pedidos"));
+      .catch((err) => {
+        if (navigator.onLine) {
+          alert("Erro ao buscar Pedidos");
+        } else {
+          console.log("Offline");
+        }
+      });
   }, 30000);
 
   useEffect(() => {

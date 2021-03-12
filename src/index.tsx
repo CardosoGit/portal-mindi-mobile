@@ -2,17 +2,19 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { Offline, Online } from "react-detect-offline";
 
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
+import OfflineSplash from "./Components/OfflineSplash";
 import store from "./Store";
 
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: "#18a797",
+      main: "#2dad67",
       contrastText: "#fff",
     },
   },
@@ -52,6 +54,9 @@ ReactDOM.render(
     <ThemeProvider theme={theme}>
       <Provider store={store}>
         <App />
+        <Offline>
+          <OfflineSplash />
+        </Offline>
       </Provider>
     </ThemeProvider>
   </React.StrictMode>,
