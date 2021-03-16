@@ -54,9 +54,9 @@ ReactDOM.render(
     <ThemeProvider theme={theme}>
       <Provider store={store}>
         <App />
-        {/* <Offline>
+        <Offline polling={false}>
           <OfflineSplash />
-        </Offline> */}
+        </Offline>
       </Provider>
     </ThemeProvider>
   </React.StrictMode>,
